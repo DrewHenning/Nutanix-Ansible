@@ -1,0 +1,91 @@
+---
+# Requires Nutanix Ansible modules to be installed from https://github.com/nutanix/nutanix.ansible
+# We will imanual mode which is equivalent to a "bare-metal" foundation where we force the install via IPMI IP
+# This will image the cluster without confirmation of running cluster
+# Potential to wipe out current cluster if wrong IPs are used
+- name: Image nodes
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - nutanix.ncp
+  tasks:
+  - name: Image nodes using manual and create a cluster
+    ntnx_foundation:
+      timeout: 4500
+      #nutanix_host is the Foundation server
+      nutanix_host: "xx.xx.xx.xx"
+      cvm_gateway: "xx.xx.xx.xx"
+      cvm_netmask: "xx.xx.xx.xx"
+      hypervisor_gateway: "xx.xx.xx.xx"
+      hypervisor_netmask: "xx.xx.xx.xx"
+      default_ipmi_user: "ADMIN"
+      nos_package: "nutanix_installer_package-release-xxxxxxxxx.tar.gz"
+      blocks:
+        - block_id: ""
+          nodes:
+            - manual_mode:
+                cvm_ip: "xx.xx.xx.xx"
+                cvm_gb_ram: 32
+                hypervisor_hostname: "AHV-A"
+                ipmi_netmask: "xx.xx.xx.xx"
+                ipmi_gateway: "xx.xx.xx.xx"
+                ipmi_ip: "xx.xx.xx.xx"
+                ipmi_password: "PASSWORD"
+                hypervisor: "ahv"
+                hypervisor_ip: "xx.xx.xx.xx"
+                node_position: "A"
+            - manual_mode:
+                cvm_ip: "xx.xx.xx.xx"
+                cvm_gb_ram: 36
+                hypervisor_hostname: "AHV-B"
+                ipmi_netmask: "xx.xx.xx.xx"
+                ipmi_gateway: "xx.xx.xx.xx"
+                ipmi_ip: "xx.xx.xx.xx"
+                ipmi_password: "PASSWORD"
+                hypervisor: "ahv"
+                hypervisor_ip: "xx.xx.xx.xx"
+                node_position: "B"
+            - manual_mode:
+                cvm_ip: "10.42.8.31"
+                cvm_gb_ram: 36
+                hypervisor_hostname: "AHV-C"
+                ipmi_netmask: "xx.xx.xx.xx"
+                ipmi_gateway: "xx.xx.xx.xx"
+                ipmi_ip: "xx.xx.xx.xx"
+                ipmi_password: "PASSWORD"
+                hypervisor: "ahv"
+                hypervisor_ip: "xx.xx.xx.xx"
+                node_position: "C"
+            - manual_mode:
+                cvm_ip: "xx.xx.xx.xx"
+                cvm_gb_ram: 36
+                hypervisor_hostname: "AHV-D"
+                ipmi_netmask: "xx.xx.xx.xx"
+                ipmi_gateway: "xx.xx.xx.xx"
+                ipmi_ip: "xx.xx.xx.xx"
+                ipmi_password: "PASSWORD"
+                hypervisor: "ahv"
+                hypervisor_ip: "xx.xx.xx.xx"
+                node_position: "D"
+      clusters:
+          - name: "MadeByAnsible"
+            redundancy_factor: 2
+            cluster_members:
+              - "xx.xx.xx.xx"
+              - "xx.xx.xx.xx"
+              - "xx.xx.xx.xx"
+              - "xx.xx.xx.xx"
+            cvm_vip: "xx.xx.xx.xx"
+            cvm_dns_servers:
+              - "8.8.8.8"
+              - "1.1.1.1"
+            cvm_ntp_servers:
+              - "0.pool.ntp.org"
+              - "1.pool.ntp.org"
+              - "2.pool.ntp.org"
+            timezone: "America/Chicago"
+
+    register: output
+
+  - debug:
+      msg: '{{ output }}'
