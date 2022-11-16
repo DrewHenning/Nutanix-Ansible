@@ -1,0 +1,24 @@
+---
+- name: VM playbook
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - nutanix.ncp
+  module_defaults:
+    group/nutanix.ncp.ntnx:
+      #nutanix_host = Prism Central
+      nutanix_host: "xx.xx.xx.xx"
+      nutanix_username: "username"
+      nutanix_password: "password"
+      validate_certs: false
+
+  tasks:
+
+  - name: Setting Variables
+    set_fact:
+        vm_uuid_to_delete: "xxxxxxx"
+
+  - name: delete VM
+    ntnx_vms:
+      state: absent
+      vm_uuid: "{{vm_uuid_to_delete}}"

@@ -1,0 +1,13 @@
+#cloud-config
+hostname: vm1
+fqdn: vm1.dev.test
+password: password123
+chpasswd: { expire: False }
+ssh_pwauth: True
+users:
+  - name: ansible
+    shell: /bin/bash
+    password: password123
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQinhjABgQC3fS0+7cBzJZHE3Y9AasdfwdtNa/Qpch1NAjgrA8bD18Zif0ey59GcHYdhba5WxVHg4C3jD/Yh1N/Q/k+4eOrMKbxvVK8inT64LJbOW+7WSpHJvp1svPs2UjSjyWuCaIHAuRqujwzc3Ah1E71NQAezR+1wSp4tiuCh30jS3OMUjb2AsPO0qFvXtXlNIjjWPYYS91f46RxX9uXJUl7fmQNZzeZKkGh67oDCSo5cHOuSB+on89/zj9uRDyOzFYoo4hG1ygV1b5JMs4HWDWPiWFHLilaifu1Va0CKpsJPWLEF4/hxoLWVQiSiUWEMIeVO/JunswfAWW1itnvttJ8eY0B6YDA9P/dv4+B3bW0INzNJTGDg/YYXEJaQiTe+hR0DdT53ae5nSE5bg6hnECZcXY27HAIlblAwdNzfpSo3MjUSFfuI15oTwgLOTSywfVOT3THBDV5lXEkqSi7B4mAgoo8FnCON7ovNJnZF0ptEXHYsRoU1PU7nsgDt+01v8J2WHWs=

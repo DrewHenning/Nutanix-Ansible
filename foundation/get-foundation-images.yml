@@ -1,0 +1,25 @@
+---
+# requires Nutanix Ansible modules be installed from https://github.com/nutanix/nutanix.ansible
+# pull hypervisor and nos packages info from Foundation Server
+# use image name in image-bare-metal.yml playbook
+
+- name: Get hypervisor and nos packages info from FVM
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - nutanix.ncp
+  tasks:
+    - name: get hypervisor images info from foundation
+      ntnx_foundation_hypervisor_images_info:
+        nutanix_host: "10.42.154.173"
+      register: hyp
+
+    - name: get aos images info from foundation
+      ntnx_foundation_aos_packages_info:
+        nutanix_host: "10.42.154.173"
+      register: nos
+
+    - debug:
+        msg: "{{ hyp }}"
+    - debug:
+        msg: "{{ nos }}"

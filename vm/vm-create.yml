@@ -1,0 +1,58 @@
+---
+- name: VM playbook
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - nutanix.ncp
+  module_defaults:
+    group/nutanix.ncp.ntnx:
+      nutanix_host: "xx.xx.xx.xx"
+      nutanix_username: "username"
+      nutanix_password: "password"
+      validate_certs: false
+  tasks:
+  - name: Setting Variables
+    set_fact:
+        cluster_name: "NTNXclustername"
+        vm_name: "vm1"
+        vm_description: "Something about vm1"
+        script_path: "cloud-init.yml"
+        subnet_name: "SubnetName"
+        image_name: "ubuntu-22.04-server-cloudimg-amd64.img"
+
+  - name: create Vm
+    ntnx_vms:
+      state: present
+      name: "{{vm_name}}"
+      desc: "{{vm_description}}"
+      categories:
+        AppType:
+          - "Apache_Spark"
+      cluster:
+        name: "{{cluster_name}}"
+      networks:
+        - is_connected: True
+          subnet:
+            name: "{{ subnet_name }}"
+            # mention cluster only when there are multiple subnets with same name accross clusters
+            # and subnet name is set above
+            cluster:
+              name: "{{cluster_name}}"
+      disks:
+        - type: "DISK"
+          size_gb: 20
+          bus: "SATA"
+          clone_image:
+            name: "{{ image_name }}"
+      vcpus: 2
+      cores_per_vcpu: 1
+      memory_gb: 2
+      guest_customization:
+        type: "cloud_init"
+        script_path: "{{ script_path }}"
+        is_overridable: false
+    register: output
+
+  - name: output of vm created
+    debug:
+      msg: '{{ output }}'
